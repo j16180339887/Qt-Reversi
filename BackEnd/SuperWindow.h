@@ -9,6 +9,7 @@
 #define PieceSize 8
 
 typedef QVector< QVector<Piece*> > ChessPieces;
+typedef QVector< QVector< QVector<Type> > > BACKUP;
 
 namespace Ui {
 class SuperWindow;
@@ -29,6 +30,10 @@ private:
     Type Enemy;
     int NumberOfBlack;
     int NumberOfWhite;
+    int totalMove;
+    int MaxBackUpMove;
+    BACKUP BackUp;
+    void Refresh();
 
 private slots:
     void getDropPiece(int, int );

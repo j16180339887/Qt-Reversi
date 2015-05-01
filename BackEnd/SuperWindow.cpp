@@ -51,6 +51,46 @@ SuperWindow::~SuperWindow()
     delete ui;
 }
 
+void SuperWindow::Restart()
+{
+    BackUp.clear();
+
+    BackUp.resize(64);
+    for(int i = 0; i < 64; i++){
+        BackUp[i].resize(PieceSize);
+        for(int j = 0; j < PieceSize; j++){
+            BackUp[i][j].resize(PieceSize);
+        }
+    }
+    for(int i = 0; i < PieceSize; i++)
+    {
+        for(int j = 0; j < PieceSize; j++)
+        {
+            Pieces[i][j]->setIcon(QIcon());
+            Pieces[i][j]->type = Empty;
+            BackUp[0][i][j] = Pieces[i][j]->type;
+        }
+    }
+
+    Pieces[3][3]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png"))); Pieces[3][3]->type = White;
+    Pieces[4][4]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png"))); Pieces[4][4]->type = White;
+    Pieces[3][4]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png"))); Pieces[3][4]->type = Black;
+    Pieces[4][3]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png"))); Pieces[4][3]->type = Black;
+    BackUp[0][3][3] = White;
+    BackUp[0][4][4] = White;
+    BackUp[0][3][4] = Black;
+    BackUp[0][4][3] = Black;
+
+    NumberOfBlack = 2;
+    NumberOfWhite = 2;
+    Player = White;
+    Enemy  = Black;
+
+    totalMove = MaxBackUpMove = 0;
+    ui->BlackNumber->display(NumberOfBlack);
+    ui->WhiteNumber->display(NumberOfWhite);
+}
+
 int SuperWindow::NumberOfPieceEat(int row, int column, int deltaX, int deltaY)
 {
     int deltaRow = row + deltaY,
@@ -143,41 +183,78 @@ void SuperWindow::getDropPiece(int row, int column)
 
     Pieces[row][column]->type = Player;
     qSwap(Player, Enemy);
+
     ui->BlackNumber->display(NumberOfBlack);
     ui->WhiteNumber->display(NumberOfWhite);
+
+    totalMove++;
+    for(int i = 0; i < PieceSize; i++){
+        for(int j = 0; j < PieceSize; j++){
+            BackUp[totalMove][i][j] = Pieces[i][j]->type;
+        }
+    }
+    MaxBackUpMove = totalMove > MaxBackUpMove ? totalMove : MaxBackUpMove;
 }
 
-void SuperWindow::Restart()
+void SuperWindow::Undo()
 {
+    if(totalMove == 0){
+        return;
+    }
+
+    totalMove--;
+    for(int i = 0; i < PieceSize; i++)
+    {
+        for(int j = 0; j < PieceSize; j++)
+        {
+            Pieces[i][j]->type = BackUp[totalMove][i][j];
+        }
+    }
+
+    qSwap(Player, Enemy);
+    Refresh();
+}
+
+void SuperWindow::Redo()
+{
+    if(MaxBackUpMove <= totalMove){
+        return;
+    }
+
+    totalMove++;
+    for(int i = 0; i < PieceSize; i++)
+    {
+        for(int j = 0; j < PieceSize; j++)
+        {
+            Pieces[i][j]->type = BackUp[totalMove][i][j];
+        }
+    }
+
+    qSwap(Player, Enemy);
+    Refresh();
+}
+
+void SuperWindow::Refresh()
+{
+    int B = 0, W = 0;
     for(int i = 0; i < PieceSize; i++)
     {
         for(int j = 0; j < PieceSize; j++)
         {
             Pieces[i][j]->setIcon(QIcon());
-            Pieces[i][j]->type = Empty;
+            if(Pieces[i][j]->type == White){
+                W++;
+                Pieces[i][j]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
+            }else if(Pieces[i][j]->type == Black){
+                B++;
+                Pieces[i][j]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
+            }else{
+                Pieces[i][j]->setIcon(QIcon());
+            }
         }
     }
-
-    Pieces[3][3]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png"))); Pieces[3][3]->type = White;
-    Pieces[4][4]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png"))); Pieces[4][4]->type = White;
-    Pieces[3][4]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png"))); Pieces[3][4]->type = Black;
-    Pieces[4][3]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png"))); Pieces[4][3]->type = Black;
-
-    NumberOfBlack = 2;
-    NumberOfWhite = 2;
-    Player = White;
-    Enemy  = Black;
-
+    NumberOfBlack = B;
+    NumberOfWhite = W;
     ui->BlackNumber->display(NumberOfBlack);
     ui->WhiteNumber->display(NumberOfWhite);
-}
-
-void SuperWindow::Undo()
-{
-
-}
-
-void SuperWindow::Redo()
-{
-
 }
