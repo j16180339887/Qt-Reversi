@@ -4,12 +4,19 @@
 #include <QPushButton>
 #include <QMouseEvent>
 
+enum Type{
+    Empty,
+    White,
+    Black
+};
+
 class Piece : public QPushButton
 {
     Q_OBJECT
 public:
     Piece(QWidget *parent = 0);
     void setIndex(int, int);
+    Type type;
 
 private:
     int row;

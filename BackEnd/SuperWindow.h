@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QVector>
 #include <QGridLayout>
+#include <QDebug>
 #include "Piece.h"
 #define PieceSize 8
 
@@ -23,9 +24,12 @@ public:
 private:
     Ui::SuperWindow *ui;
     ChessPieces Pieces;
+    int NumberOfPieceEat(int, int, int, int);
+    Type Player;
+    Type Enemy;
 
 private slots:
-    void getDropPiece(int, int);
+    void getDropPiece(int, int );
 };
 
 #endif // SUPERWINDOW_H

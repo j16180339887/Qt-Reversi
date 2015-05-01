@@ -3,7 +3,7 @@
 Piece::Piece(QWidget *parent) :
     QPushButton(parent)
 {
-
+    type = Empty;
 }
 
 void Piece::setIndex(int i, int j)
