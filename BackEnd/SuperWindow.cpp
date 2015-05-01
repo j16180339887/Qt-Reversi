@@ -8,10 +8,6 @@ SuperWindow::SuperWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Qt-Reversi");
 
-
-
-
-
     /* Pieces[PieceSize][PieceSize] */
     Pieces.resize(PieceSize);
     for(int i = 0; i < PieceSize; i++){
@@ -38,20 +34,16 @@ SuperWindow::SuperWindow(QWidget *parent) :
         }
     }
 
-    Pieces[3][3]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
-    Pieces[4][4]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
-    Pieces[3][4]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
-    Pieces[4][3]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
+    connect(ui->Restart, SIGNAL(clicked(bool)), this, SLOT(Restart()));
+    connect(ui->Undo, SIGNAL(clicked(bool)), this, SLOT(Undo()));
+    connect(ui->Redo, SIGNAL(clicked(bool)), this, SLOT(Redo()));
 
-    Pieces[3][3]->type = White;
-    Pieces[4][4]->type = White;
-    Pieces[3][4]->type = Black;
-    Pieces[4][3]->type = Black;
-
-    Player = White;
-    Enemy  = Black;
-
+    ui->BlackPieceImage->setPixmap(QPixmap(":/Image/BlackChess.png").scaled(40, 40, Qt::KeepAspectRatio));
+    ui->WhitePieceImage->setPixmap(QPixmap(":/Image/WhiteChess.png").scaled(40, 40, Qt::KeepAspectRatio));
     ui->ChessBoardLabel->setLayout(ChessBoardLayout);
+
+    /* The Game Begin */
+    Restart();
 }
 
 SuperWindow::~SuperWindow()
@@ -123,6 +115,14 @@ void SuperWindow::getDropPiece(int row, int column)
 
             int Eat = NumberOfPieceEat(row, column, deltaX, deltaY);
 
+            if(Player == Black){
+                NumberOfBlack += Eat;
+                NumberOfWhite -= Eat;
+            }else{
+                NumberOfWhite += Eat;
+                NumberOfBlack -= Eat;
+            }
+
             if(MaxEat < Eat){
                 MaxEat = Eat;
             }
@@ -135,10 +135,49 @@ void SuperWindow::getDropPiece(int row, int column)
 
     if(Player == Black){
         Pieces[row][column]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
+        NumberOfBlack++;
     }else{
         Pieces[row][column]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
+        NumberOfWhite++;
     }
 
     Pieces[row][column]->type = Player;
     qSwap(Player, Enemy);
+    ui->BlackNumber->display(NumberOfBlack);
+    ui->WhiteNumber->display(NumberOfWhite);
+}
+
+void SuperWindow::Restart()
+{
+    for(int i = 0; i < PieceSize; i++)
+    {
+        for(int j = 0; j < PieceSize; j++)
+        {
+            Pieces[i][j]->setIcon(QIcon());
+            Pieces[i][j]->type = Empty;
+        }
+    }
+
+    Pieces[3][3]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png"))); Pieces[3][3]->type = White;
+    Pieces[4][4]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png"))); Pieces[4][4]->type = White;
+    Pieces[3][4]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png"))); Pieces[3][4]->type = Black;
+    Pieces[4][3]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png"))); Pieces[4][3]->type = Black;
+
+    NumberOfBlack = 2;
+    NumberOfWhite = 2;
+    Player = White;
+    Enemy  = Black;
+
+    ui->BlackNumber->display(NumberOfBlack);
+    ui->WhiteNumber->display(NumberOfWhite);
+}
+
+void SuperWindow::Undo()
+{
+
+}
+
+void SuperWindow::Redo()
+{
+
 }

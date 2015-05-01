@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
-    <height>399</height>
+    <width>361</width>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,20 @@
 
 #centralWidget{
 	background-image : url(:/Image/ChessBoard.jpg);
+}
+
+#Restart, #Undo, #Redo{
+	border : none;
+	border-radius : 5px;
+ 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                       stop:0 rgb(0, 0, 255), stop:1 rgb(0, 0, 155));
+	color : white;
+	font-family : 'Consolas';
+}
+
+#Restart:hover, #Undo:hover, #Redo:hover{
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                       stop:0 rgb(0, 0, 200), stop:1 rgb(0, 0, 100));
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -34,6 +48,91 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="BlackNumber">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>440</y>
+      <width>64</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="WhiteNumber">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>440</y>
+      <width>64</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="BlackPieceImage">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>390</y>
+      <width>40</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="WhitePieceImage">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>390</y>
+      <width>40</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Undo">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>410</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Undo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Redo">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>440</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Redo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Restart">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>380</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Restart</string>
     </property>
    </widget>
   </widget>

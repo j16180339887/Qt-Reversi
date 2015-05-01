@@ -27,9 +27,14 @@ private:
     int NumberOfPieceEat(int, int, int, int);
     Type Player;
     Type Enemy;
+    int NumberOfBlack;
+    int NumberOfWhite;
 
 private slots:
     void getDropPiece(int, int );
+    void Restart();
+    void Undo();
+    void Redo();
 };
 
 #endif // SUPERWINDOW_H
