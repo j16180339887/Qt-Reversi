@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>537</width>
-    <height>434</height>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,10 @@
   <property name="styleSheet">
    <string notr="true">QPushButton{
 	border : 1px solid black;
+}
+
+#centralWidget{
+	background-image : url(:/Image/ChessBoard.jpg);
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">

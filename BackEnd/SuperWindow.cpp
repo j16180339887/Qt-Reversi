@@ -8,9 +8,12 @@ SuperWindow::SuperWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Qt-Reversi");
 
-    Pieces.resize(PieceSize);
+
+
+
 
     /* Pieces[PieceSize][PieceSize] */
+    Pieces.resize(PieceSize);
     for(int i = 0; i < PieceSize; i++){
         Pieces[i].resize(PieceSize);
     }
