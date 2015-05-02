@@ -37,6 +37,7 @@ SuperWindow::SuperWindow(QWidget *parent) :
     connect(ui->Restart, SIGNAL(clicked(bool)), this, SLOT(Restart()));
     connect(ui->Undo, SIGNAL(clicked(bool)), this, SLOT(Undo()));
     connect(ui->Redo, SIGNAL(clicked(bool)), this, SLOT(Redo()));
+    connect(ui->AI, SIGNAL(clicked(bool)), this, SLOT(AI()));
 
     ui->BlackPieceImage->setPixmap(QPixmap(":/Image/BlackChess.png").scaled(40, 40, Qt::KeepAspectRatio));
     ui->WhitePieceImage->setPixmap(QPixmap(":/Image/WhiteChess.png").scaled(40, 40, Qt::KeepAspectRatio));
@@ -174,27 +175,7 @@ void SuperWindow::getDropPiece(int row, int column)
         return;
     }
 
-    if(Player == Black){
-        Pieces[row][column]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
-        NumberOfBlack++;
-    }else{
-        Pieces[row][column]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
-        NumberOfWhite++;
-    }
-
-    Pieces[row][column]->type = Player;
-    qSwap(Player, Enemy);
-
-    ui->BlackNumber->display(NumberOfBlack);
-    ui->WhiteNumber->display(NumberOfWhite);
-
-    totalMove++;
-    for(int i = 0; i < PieceSize; i++){
-        for(int j = 0; j < PieceSize; j++){
-            BackUp[totalMove][i][j] = Pieces[i][j]->type;
-        }
-    }
-    MaxBackUpMove = totalMove > MaxBackUpMove ? totalMove : MaxBackUpMove;
+    DropThisPiece(row, column);
 }
 
 void SuperWindow::Undo()
@@ -233,6 +214,117 @@ void SuperWindow::Redo()
 
     qSwap(Player, Enemy);
     Refresh();
+}
+
+int SuperWindow::NumberOfPieceCanEat(int row, int column, int deltaX, int deltaY)
+{
+    int deltaRow = row + deltaY,
+        deltaColumn = column + deltaX,
+        eat = 0;
+
+    while (deltaColumn != -1 && deltaRow != -1 && deltaColumn != PieceSize && deltaRow != PieceSize) {
+        if(Pieces[deltaRow][deltaColumn]->type != Enemy){
+            break;
+        }
+
+        deltaRow += deltaY;
+        deltaColumn += deltaX;
+        eat++;
+    }
+
+    if(deltaColumn == -1 || deltaRow == -1 || deltaColumn == PieceSize || deltaRow == PieceSize){
+        return 0;
+    }
+
+    if(Pieces[deltaRow][deltaColumn]->type != Player || eat == 0){
+        return 0;
+    }
+
+    return eat;
+}
+
+int SuperWindow::NumberOfPieceCanEatTotal(int row, int column)
+{
+    int TotalEat = 0;
+    for(int deltaY = -1; deltaY <= 1; deltaY++){
+        for(int deltaX = -1; deltaX <= 1; deltaX++){
+
+            if((deltaX == 0 && deltaY == 0) || row+deltaY == -1 || row+deltaY == PieceSize || column+deltaX == -1 || column+deltaX == PieceSize){
+                continue;
+            }
+
+            TotalEat += NumberOfPieceCanEat(row, column, deltaX, deltaY);
+        }
+    }
+
+    return TotalEat;
+}
+
+void SuperWindow::DropThisPiece(int row, int column)
+{
+    if(Player == Black){
+        Pieces[row][column]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
+        NumberOfBlack++;
+    }else{
+        Pieces[row][column]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
+        NumberOfWhite++;
+    }
+
+    Pieces[row][column]->type = Player;
+    qSwap(Player, Enemy);
+
+    ui->BlackNumber->display(NumberOfBlack);
+    ui->WhiteNumber->display(NumberOfWhite);
+
+    totalMove++;
+    for(int i = 0; i < PieceSize; i++){
+        for(int j = 0; j < PieceSize; j++){
+            BackUp[totalMove][i][j] = Pieces[i][j]->type;
+        }
+    }
+    MaxBackUpMove = totalMove > MaxBackUpMove ? totalMove : MaxBackUpMove;
+}
+
+void SuperWindow::AI()
+{
+    int MaxEat = 0, MaxRow = 0, MaxColumn = 0;
+    for(int i = 0; i < PieceSize; i++){
+        for(int j = 0; j < PieceSize; j++){
+            if(Pieces[i][j]->type == Empty){
+                int eat = NumberOfPieceCanEatTotal(i, j);
+                if(eat > MaxEat){
+                    MaxEat = eat;
+                    MaxRow = i;
+                    MaxColumn = j;
+                }
+            }
+        }
+    }
+
+    if(MaxEat == 0){
+        return;
+    }
+
+    for(int deltaY = -1; deltaY <= 1; deltaY++){
+        for(int deltaX = -1; deltaX <= 1; deltaX++){
+
+            if((deltaX == 0 && deltaY == 0) || MaxRow+deltaY == -1 || MaxRow+deltaY == PieceSize || MaxColumn+deltaX == -1 || MaxColumn+deltaX == PieceSize){
+                continue;
+            }
+
+            int Eat = NumberOfPieceEat(MaxRow, MaxColumn, deltaX, deltaY);
+
+            if(Player == Black){
+                NumberOfBlack += Eat;
+                NumberOfWhite -= Eat;
+            }else{
+                NumberOfWhite += Eat;
+                NumberOfBlack -= Eat;
+            }
+        }
+    }
+
+    DropThisPiece(MaxRow, MaxColumn);
 }
 
 void SuperWindow::Refresh()

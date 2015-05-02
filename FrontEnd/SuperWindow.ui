@@ -22,7 +22,7 @@
 	background-image : url(:/Image/ChessBoard.jpg);
 }
 
-#Restart, #Undo, #Redo{
+#Restart, #Undo, #Redo, #AI{
 	border : none;
 	border-radius : 5px;
  	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -31,7 +31,7 @@
 	font-family : 'Consolas';
 }
 
-#Restart:hover, #Undo:hover, #Redo:hover{
+#Restart:hover, #Undo:hover, #Redo:hover, #AI:hover{
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                                        stop:0 rgb(0, 0, 200), stop:1 rgb(0, 0, 100));
 }</string>
@@ -100,7 +100,7 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>410</y>
+      <y>400</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -113,7 +113,7 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>440</y>
+      <y>430</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -126,13 +126,26 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>380</y>
+      <y>370</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Restart</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="AI">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>AI</string>
     </property>
    </widget>
   </widget>

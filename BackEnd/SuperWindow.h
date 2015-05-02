@@ -26,6 +26,9 @@ private:
     Ui::SuperWindow *ui;
     ChessPieces Pieces;
     int NumberOfPieceEat(int, int, int, int);
+    int NumberOfPieceCanEat(int, int, int, int);
+    int NumberOfPieceCanEatTotal(int, int);
+    void DropThisPiece(int, int);
     Type Player;
     Type Enemy;
     int NumberOfBlack;
@@ -40,6 +43,7 @@ private slots:
     void Restart();
     void Undo();
     void Redo();
+    void AI();
 };
 
 #endif // SUPERWINDOW_H
