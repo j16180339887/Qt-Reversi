@@ -241,7 +241,7 @@ void SuperWindow::DropThisPiece(int row, int column)
             BackUp[totalMove][i][j] = Pieces[i][j]->type;
         }
     }
-    MaxBackUpMove = totalMove > MaxBackUpMove ? totalMove : MaxBackUpMove;
+    MaxBackUpMove = totalMove;
 }
 
 void SuperWindow::EatPieces(int row, int column, int deltaX, int deltaY)
