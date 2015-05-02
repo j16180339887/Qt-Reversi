@@ -55,13 +55,14 @@ void SuperWindow::Restart()
 {
     BackUp.clear();
 
-    BackUp.resize(64);
-    for(int i = 0; i < 64; i++){
+    BackUp.resize(PieceSize * PieceSize);
+    for(int i = 0; i < PieceSize * PieceSize; i++){
         BackUp[i].resize(PieceSize);
         for(int j = 0; j < PieceSize; j++){
             BackUp[i][j].resize(PieceSize);
         }
     }
+
     for(int i = 0; i < PieceSize; i++)
     {
         for(int j = 0; j < PieceSize; j++)
