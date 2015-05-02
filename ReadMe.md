@@ -4,6 +4,7 @@ Qt-Reversi
 * A simple game by Qt c++
 * A school assignment
 * Play with left mouse button
+* Image by Blender Cycle Render
 * Cross Platform
 * MPL License
 
@@ -17,5 +18,4 @@ Build
 ScreenShots
 =====
 
-![](http://i.imgur.com/8WV7LhA.png)
-![](http://i.imgur.com/wRsc3Lp.png)
+![](http://i.imgur.com/8WV7LhA.png) ![](http://i.imgur.com/wRsc3Lp.png)
