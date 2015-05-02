@@ -25,10 +25,10 @@ public:
 private:
     Ui::SuperWindow *ui;
     ChessPieces Pieces;
-    int NumberOfPieceEat(int, int, int, int);
     int NumberOfPieceCanEat(int, int, int, int);
     int NumberOfPieceCanEatTotal(int, int);
     void DropThisPiece(int, int);
+    void EatPieces(int, int, int, int);
     Type Player;
     Type Enemy;
     int NumberOfBlack;

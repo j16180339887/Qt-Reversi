@@ -93,53 +93,6 @@ void SuperWindow::Restart()
     ui->WhiteNumber->display(NumberOfWhite);
 }
 
-int SuperWindow::NumberOfPieceEat(int row, int column, int deltaX, int deltaY)
-{
-    int deltaRow = row + deltaY,
-        deltaColumn = column + deltaX,
-        eat = 0;
-
-    while (deltaColumn != -1 && deltaRow != -1 && deltaColumn != PieceSize && deltaRow != PieceSize) {
-        if(Pieces[deltaRow][deltaColumn]->type != Enemy){
-            break;
-        }
-
-        deltaRow += deltaY;
-        deltaColumn += deltaX;
-        eat++;
-    }
-
-    if(deltaColumn == -1 || deltaRow == -1 || deltaColumn == PieceSize || deltaRow == PieceSize){
-        return 0;
-    }
-
-    if(Pieces[deltaRow][deltaColumn]->type != Player || eat == 0){
-        return 0;
-    }
-
-    if(deltaRow != -1 && deltaColumn != -1 && deltaRow != PieceSize && deltaColumn != PieceSize){
-        /* Start Eating */
-        int EatRow = row + deltaY,
-            EatColumn = column + deltaX;
-
-        while (EatRow != -1 && EatColumn != -1 && EatRow != PieceSize && EatColumn != PieceSize && Pieces[EatRow][EatColumn]->type != Player) {
-
-            if(Player == Black){
-                Pieces[EatRow][EatColumn]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
-                Pieces[EatRow][EatColumn]->type = Black;
-            }else{
-                Pieces[EatRow][EatColumn]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
-                Pieces[EatRow][EatColumn]->type = White;
-            }
-
-            EatRow += deltaY;
-            EatColumn += deltaX;
-        }
-    }
-
-    return eat;
-}
-
 void SuperWindow::getDropPiece(int row, int column)
 {
     if(Pieces[row][column]->type != Empty){
@@ -155,7 +108,13 @@ void SuperWindow::getDropPiece(int row, int column)
                 continue;
             }
 
-            int Eat = NumberOfPieceEat(row, column, deltaX, deltaY);
+            int Eat = NumberOfPieceCanEat(row, column, deltaX, deltaY);
+
+            if(Eat == 0){
+                continue;
+            }
+
+            EatPieces(row, column, deltaX, deltaY);
 
             if(Player == Black){
                 NumberOfBlack += Eat;
@@ -285,6 +244,32 @@ void SuperWindow::DropThisPiece(int row, int column)
     MaxBackUpMove = totalMove > MaxBackUpMove ? totalMove : MaxBackUpMove;
 }
 
+void SuperWindow::EatPieces(int row, int column, int deltaX, int deltaY)
+{
+    int deltaRow = row + deltaY,
+        deltaColumn = column + deltaX;
+
+    if(deltaRow != -1 && deltaColumn != -1 && deltaRow != PieceSize && deltaColumn != PieceSize){
+        /* Start Eating */
+        int EatRow = row + deltaY,
+            EatColumn = column + deltaX;
+
+        while (EatRow != -1 && EatColumn != -1 && EatRow != PieceSize && EatColumn != PieceSize && Pieces[EatRow][EatColumn]->type != Player) {
+
+            if(Player == Black){
+                Pieces[EatRow][EatColumn]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
+                Pieces[EatRow][EatColumn]->type = Black;
+            }else{
+                Pieces[EatRow][EatColumn]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
+                Pieces[EatRow][EatColumn]->type = White;
+            }
+
+            EatRow += deltaY;
+            EatColumn += deltaX;
+        }
+    }
+}
+
 void SuperWindow::AI()
 {
     int MaxEat = 0, MaxRow = 0, MaxColumn = 0;
@@ -312,7 +297,13 @@ void SuperWindow::AI()
                 continue;
             }
 
-            int Eat = NumberOfPieceEat(MaxRow, MaxColumn, deltaX, deltaY);
+            int Eat = NumberOfPieceCanEat(MaxRow, MaxColumn, deltaX, deltaY);
+
+            if(Eat == 0){
+                continue;
+            }
+
+            EatPieces(MaxRow, MaxColumn, deltaX, deltaY);
 
             if(Player == Black){
                 NumberOfBlack += Eat;
