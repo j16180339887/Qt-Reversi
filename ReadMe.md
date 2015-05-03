@@ -14,6 +14,7 @@ Build
 1. Install Qt
 2. Open Qt-Reversi.pro with Qt Creator
 3. Build and Run
+4. Drink a cup of coffee or beer
 
 ScreenShots
 =====

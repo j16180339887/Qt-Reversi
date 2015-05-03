@@ -320,25 +320,23 @@ void SuperWindow::AI()
 
 void SuperWindow::Refresh()
 {
-    int B = 0, W = 0;
+    NumberOfBlack = NumberOfWhite = 0;
     for(int i = 0; i < PieceSize; i++)
     {
         for(int j = 0; j < PieceSize; j++)
         {
             Pieces[i][j]->setIcon(QIcon());
             if(Pieces[i][j]->type == White){
-                W++;
+                NumberOfWhite++;
                 Pieces[i][j]->setIcon(QIcon(QPixmap(":/Image/WhiteChess.png")));
             }else if(Pieces[i][j]->type == Black){
-                B++;
+                NumberOfBlack++;
                 Pieces[i][j]->setIcon(QIcon(QPixmap(":/Image/BlackChess.png")));
             }else{
                 Pieces[i][j]->setIcon(QIcon());
             }
         }
     }
-    NumberOfBlack = B;
-    NumberOfWhite = W;
     ui->BlackNumber->display(NumberOfBlack);
     ui->WhiteNumber->display(NumberOfWhite);
 }
